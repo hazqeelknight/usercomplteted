@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { CheckCircle, Error, Email } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/core';
 import { useUserAuth } from '../hooks';
 import { useVerifyEmail, useResendVerification } from '../api';
