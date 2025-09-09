@@ -12,6 +12,7 @@ import { CheckCircle, Error, Email } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/core';
+import { useUserAuth } from '../hooks';
 import { useVerifyEmail, useResendVerification } from '../api';
 
 const VerifyEmail: React.FC = () => {
@@ -22,6 +23,7 @@ const VerifyEmail: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error'>('pending');
   
+  const { logout } = useUserAuth();
   const verifyEmailMutation = useVerifyEmail();
   const resendVerificationMutation = useResendVerification();
 
@@ -148,7 +150,10 @@ const VerifyEmail: React.FC = () => {
                   <Box sx={{ mt: 3 }}>
                     <Button
                       variant="outlined"
-                      onClick={() => navigate('/login')}
+                      onClick={() => {
+                        logout();
+                        navigate('/login');
+                      }}
                     >
                       Back to Login
                     </Button>
