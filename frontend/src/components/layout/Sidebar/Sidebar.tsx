@@ -115,7 +115,7 @@ export const Sidebar: React.FC = () => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const { sidebarOpen, sidebarCollapsed, setSidebarOpen, toggleSidebarCollapse } = useUIStore();
+  const { sidebarOpen, sidebarCollapsed, toggleSidebarCollapse } = useUIStore();
   const { user } = useAuthStore();
   
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
@@ -242,7 +242,7 @@ export const Sidebar: React.FC = () => {
               <ListItemIcon
                 sx={{
                   minWidth: sidebarCollapsed ? 0 : 40,
-                  color: isItemActive(item) ? 'primary.main' : 'text.secondary',
+                  color: isItemActive(item) ? 'primary.main' : 'text.secondary', // Keep this line
                 }}
               >
                 <item.icon />

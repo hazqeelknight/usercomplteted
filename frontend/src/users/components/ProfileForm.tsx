@@ -25,14 +25,8 @@ import { validatePhoneNumber, validateTimezone, getAvailableTimezones } from '..
 
 interface ProfileFormProps {
   profile: Profile;
-  onSubmit: (data: Partial<Profile> | FormData) => void;
+  onSubmit: (data: Partial<Profile>) => void;
   isLoading?: boolean;
-}
-
-export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading = false }) => {
-  const navigate = useNavigate();
-  const { user } = useAuthStore();
-  const timezones = getAvailableTimezones();
   
   // Image upload mutations
   const uploadProfilePictureMutation = useUploadProfilePicture();
@@ -46,23 +40,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
     formState: { errors },
   } = useForm<Partial<Profile>>({
     defaultValues: profile,
-  });
 
-  const handleFormSubmit = (data: Partial<Profile>) => {
-    // Exclude profile_picture and brand_logo from the data object
-    // as they are handled by separate mutations via ImageUpload components.
-    const { profile_picture, brand_logo, ...restOfData } = data;
-    onSubmit(restOfData);
+    onSubmit(data);
   };
 
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
-  };
   const handleProfilePictureUpload = (file: File) => {
     uploadProfilePictureMutation.mutate({ file });
   };
@@ -78,6 +59,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
   const handleRemoveBrandLogo = () => {
     removeBrandLogoMutation.mutate();
   };
+
   return (
     <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
       <Grid container spacing={3}>
@@ -185,6 +167,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
               <Typography variant="h6" gutterBottom>
                 Contact Information
               </Typography>
+
               
               {/* Phone Verification Status Alert */}
               {user && !user.is_phone_verified && profile.phone && (
@@ -206,6 +189,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
                   Your phone number is not verified. Verify it to enable SMS notifications and MFA.
                 </Alert>
               )}
+              
               
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -302,6 +286,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
               <Typography variant="h6" gutterBottom>
                 Localization
               </Typography>
+
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Controller
@@ -313,7 +298,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
                     }}
                     render={({ field }) => (
                       <FormControl fullWidth>
-                        <InputLabel>Timezone</InputLabel>
+                        <InputLabel id="timezone-label">Timezone</InputLabel>
                         <Select {...field} label="Timezone">
                           {timezones.map((tz) => (
                             <MenuItem key={tz.value} value={tz.value}>
@@ -331,7 +316,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
-                        <InputLabel>Language</InputLabel>
+                        <InputLabel id="language-label">Language</InputLabel>
                         <Select {...field} label="Language">
                           <MenuItem value="en">English</MenuItem>
                           <MenuItem value="es">Spanish</MenuItem>
@@ -348,7 +333,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
-                        <InputLabel>Date Format</InputLabel>
+                        <InputLabel id="date-format-label">Date Format</InputLabel>
                         <Select {...field} label="Date Format">
                           <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>
                           <MenuItem value="DD/MM/YYYY">DD/MM/YYYY</MenuItem>
@@ -364,7 +349,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
-                        <InputLabel>Time Format</InputLabel>
+                        <InputLabel id="time-format-label">Time Format</InputLabel>
                         <Select {...field} label="Time Format">
                           <MenuItem value="12h">12 Hour (AM/PM)</MenuItem>
                           <MenuItem value="24h">24 Hour</MenuItem>

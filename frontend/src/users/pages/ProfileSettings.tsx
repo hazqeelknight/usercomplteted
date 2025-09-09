@@ -10,7 +10,7 @@ const ProfileSettings: React.FC = () => {
   const { data: profile, isLoading, error } = useProfile();
   const updateProfileMutation = useUpdateProfile();
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
-
+  
   const handleProfileUpdate = (updates: Partial<Profile>) => {
     updateProfileMutation.mutate(updates);
   };
