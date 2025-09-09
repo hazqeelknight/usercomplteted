@@ -27,6 +27,12 @@ interface ProfileFormProps {
   profile: Profile;
   onSubmit: (data: Partial<Profile>) => void;
   isLoading?: boolean;
+}
+
+export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading }) => {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const timezones = getAvailableTimezones();
   
   // Image upload mutations
   const uploadProfilePictureMutation = useUploadProfilePicture();
@@ -40,7 +46,9 @@ interface ProfileFormProps {
     formState: { errors },
   } = useForm<Partial<Profile>>({
     defaultValues: profile,
+  });
 
+  const handleFormSubmit = (data: Partial<Profile>) => {
     onSubmit(data);
   };
 
