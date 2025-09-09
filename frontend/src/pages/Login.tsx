@@ -48,8 +48,17 @@ const Login: React.FC = () => {
     } catch (error: any) {
       if (error?.response?.data?.code === 'password_expired') {
         navigate('/users/change-password');
+      } else if (
+        error?.response?.data?.error?.includes('Please verify your email address before logging in') ||
+        error?.response?.data?.non_field_errors?.some((msg: string) => 
+          msg.includes('Please verify your email address before logging in')
+        )
+      ) {
+        navigate('/verify-email', { state: { email: data.email } });
       } else if (error?.response?.data?.error) {
         setError('root', { message: error.response.data.error });
+      } else if (error?.response?.data?.non_field_errors) {
+        setError('root', { message: error.response.data.non_field_errors[0] });
       }
     }
   };

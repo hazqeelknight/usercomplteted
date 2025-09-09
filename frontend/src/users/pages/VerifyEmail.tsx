@@ -17,10 +17,11 @@ import { useVerifyEmail, useResendVerification } from '../api';
 
 const VerifyEmail: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const token = searchParams.get('token');
   
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(location.state?.email || '');
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error'>('pending');
   
   const { logout } = useUserAuth();
