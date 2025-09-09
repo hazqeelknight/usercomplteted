@@ -131,7 +131,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             }}
           >
             {!displayImage && (
-              <ImageIcon fontSize={size * 0.4} sx={{ color: 'text.secondary' }} />
+              <ImageIcon sx={{ fontSize: size * 0.4, color: 'text.secondary' }} />
             )}
           </Avatar>
 
