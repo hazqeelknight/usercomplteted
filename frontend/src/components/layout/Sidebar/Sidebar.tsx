@@ -114,7 +114,7 @@ const navigationItems: NavigationItem[] = [
 export const Sidebar: React.FC = () => {
   const theme = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
+  const { toggleSidebarCollapse } = useUIStore();
   const { sidebarOpen, sidebarCollapsed, toggleSidebarCollapse } = useUIStore();
   const { user } = useAuthStore();
   

@@ -23,22 +23,25 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user account is active
-  if (user?.account_status !== 'active') {
-    if (user?.account_status === 'pending_verification') {
-      return <Navigate to="/verify-email" replace />;
-    }
-    // If account is active but email is not verified, redirect to verification
-  } else if (!user?.is_email_verified) {
-    return <Navigate to="/verify-email" replace />;
-    if (user?.account_status === 'password_expired' || user?.account_status === 'password_expired_grace_period') {
+  // Handle various account statuses and email verification
+  if (user) {
+    // Priority 1: Password expiry/grace period
+    if (user.account_status === 'password_expired' || user.account_status === 'password_expired_grace_period') {
       return <Navigate to="/change-password" replace />;
     }
-    // For other statuses (suspended, inactive), redirect to login
-    return <Navigate to="/login" replace />;
+
+    // Priority 2: Email verification (for pending_verification accounts or active but unverified emails)
+    if (user.account_status === 'pending_verification' || !user.is_email_verified) {
+      return <Navigate to="/verify-email" replace />;
+    }
+
+    // Priority 3: Other non-active statuses (suspended, inactive, etc.)
+    if (user.account_status !== 'active') {
+      return <Navigate to="/login" replace />;
+    }
   }
 
-  // Check permissions if required
+  // Check permissions if required (only if user is authenticated and account status is 'active' and email verified)
   if (requiredPermission && user) {
     const hasPermission = user.roles.some(role =>
       role.role_permissions.some(permission => permission.codename === requiredPermission)
