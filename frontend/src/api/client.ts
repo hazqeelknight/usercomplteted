@@ -41,6 +41,9 @@ apiClient.interceptors.response.use(
     
     if (response?.status === 403) {
       toast.error('You do not have permission to perform this action');
+    } else if (response?.data?.detail) {
+      // Handle API responses with 'detail' field (e.g., throttling, validation errors)
+      toast.error(response.data.detail);
     } else if (response?.status === 404) {
       toast.error('The requested resource was not found');
     } else if (response?.status >= 500) {
