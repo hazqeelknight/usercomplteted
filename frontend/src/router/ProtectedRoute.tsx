@@ -28,6 +28,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     if (user?.account_status === 'pending_verification') {
       return <Navigate to="/verify-email" replace />;
     }
+    // If account is active but email is not verified, redirect to verification
+  } else if (!user?.is_email_verified) {
+    return <Navigate to="/verify-email" replace />;
     if (user?.account_status === 'password_expired' || user?.account_status === 'password_expired_grace_period') {
       return <Navigate to="/change-password" replace />;
     }
