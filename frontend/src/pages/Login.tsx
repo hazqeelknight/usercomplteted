@@ -156,7 +156,7 @@ const Login: React.FC = () => {
                     component="button"
                     type="button"
                     variant="body2"
-                    onClick={() => navigate('/users/request-password-reset')}
+                    onClick={() => navigate('/request-password-reset')}
                   >
                     Forgot your password?
                   </Link>
