@@ -50,9 +50,9 @@ export const router = createBrowserRouter([
   {
     path: '/verify-email',
     element: (
-      <PublicRoute>
+      <React.Suspense fallback={<div>Loading...</div>}>
         <VerifyEmail />
-      </PublicRoute>
+      </React.Suspense>
     ),
   },
   {
