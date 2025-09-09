@@ -11,7 +11,7 @@ const ProfileSettings: React.FC = () => {
   const updateProfileMutation = useUpdateProfile();
   const [uploadSuccess, setUploadSuccess] = React.useState(false);
 
-  const handleProfileUpdate = (updates: Partial<Profile> | FormData) => {
+  const handleProfileUpdate = (updates: Partial<Profile>) => {
     updateProfileMutation.mutate(updates);
   };
 

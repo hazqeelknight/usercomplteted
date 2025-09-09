@@ -29,18 +29,10 @@ interface ProfileFormProps {
   isLoading?: boolean;
 }
 
-export const ProfileForm: React.FC<ProfileFormProps> = ({
-  profile,
-  onSubmit,
-  isLoading = false,
-}) => {
+export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading = false }) => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const timezones = getAvailableTimezones();
-  
-  // Local state for file management
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   
   // Image upload mutations
   const uploadProfilePictureMutation = useUploadProfilePicture();
@@ -56,28 +48,11 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     defaultValues: profile,
   });
 
-
   const handleFormSubmit = (data: Partial<Profile>) => {
-    if (selectedFile) {
-      // Create FormData for file upload
-      const formData = new FormData();
-      
-      // Append all form fields
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          formData.append(key, value.toString());
-        }
-      });
-      
-      // Append the selected file as profile_picture
-      formData.append('profile_picture', selectedFile);
-      
-      onSubmit(formData);
-    } else {
-      // Create plain object excluding profile_picture to retain existing one
-      const { profile_picture, ...updatedData } = data;
-      onSubmit(updatedData);
-    }
+    // Exclude profile_picture and brand_logo from the data object
+    // as they are handled by separate mutations via ImageUpload components.
+    const { profile_picture, brand_logo, ...restOfData } = data;
+    onSubmit(restOfData);
   };
 
   const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
