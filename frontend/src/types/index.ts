@@ -10,7 +10,7 @@ export interface User {
   is_email_verified: boolean;
   is_phone_verified: boolean;
   is_mfa_enabled: boolean;
-  account_status: 'active' | 'inactive' | 'suspended' | 'pending_verification' | 'password_expired';
+  account_status: 'active' | 'inactive' | 'suspended' | 'pending_verification' | 'password_expired' | 'password_expired_grace_period';
   roles: Role[];
   profile: Profile;
   last_login: string | null;
