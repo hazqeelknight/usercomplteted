@@ -14,7 +14,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Save, Phone, Verified, Warning } from '@mui/icons-material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useEffect } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/core';
 import { ImageUpload } from './ImageUpload';
@@ -34,6 +34,29 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
   const { user } = useAuthStore();
   const timezones = getAvailableTimezones();
   
+  // Transform profile data to handle timezone compatibility
+  const transformedProfile = React.useMemo(() => {
+    if (!profile) return profile;
+    
+    let timezone_name = profile.timezone_name;
+    
+    // Handle UTC -> Etc/UTC conversion
+    if (timezone_name === 'UTC') {
+      timezone_name = 'Etc/UTC';
+    }
+    
+    // If timezone is still not in the available list, set to empty string
+    const isValidTimezone = timezones.some(tz => tz.value === timezone_name);
+    if (!isValidTimezone) {
+      timezone_name = '';
+    }
+    
+    return {
+      ...profile,
+      timezone_name,
+    };
+  }, [profile, timezones]);
+  
   // Image upload mutations
   const uploadProfilePictureMutation = useUploadProfilePicture();
   const uploadBrandLogoMutation = useUploadBrandLogo();
@@ -44,12 +67,25 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isL
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Partial<Profile>>({
-    defaultValues: profile,
+    defaultValues: transformedProfile,
   });
 
+  // Update form when profile data changes
+  React.useEffect(() => {
+    if (transformedProfile) {
+      reset(transformedProfile);
+    }
+  }, [transformedProfile, reset]);
+
   const handleFormSubmit = (data: Partial<Profile>) => {
-    onSubmit(data);
+    // Transform timezone back for backend compatibility
+    const submitData = { ...data };
+    if (submitData.timezone_name === 'Etc/UTC') {
+      submitData.timezone_name = 'UTC';
+    }
+    onSubmit(submitData);
   };
 
   const handleProfilePictureUpload = (file: File) => {
